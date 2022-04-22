@@ -11,5 +11,13 @@ tmp=$(mktemp -d)
 #mkdir $bdir
 #touch $result
 
-unzip "${zip}" -d "${tmp}"
+unzip -q "${zip}" -d "${tmp}"
+
+for d in $(find $tmp -mindepth 1 -maxdepth 1)
+do
+	fn=$(echo $d | cut -d '/' -f 4 | cut -d '-' -f 1)
+	
+	echo $fn
+done
+
 
