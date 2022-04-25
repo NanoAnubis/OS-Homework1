@@ -48,18 +48,50 @@ do
 	then	
 		tar xf $archive -C $t/ 2>/dev/null
 		line="$line 0"
+
+		if ! [ $? -eq 0 ]
+		then
+			mkdir $bdir/$fn
+			mv $archive $bdir/$fn
+			continue
+		fi
+
 	elif [ $(file -b $archive | egrep "(tar|gzip|bzip2)" | wc -l) -eq 1 ]
 	then
 		tar xf $archive -C $t/ 2>/dev/null
 		line="$line 1"	
+
+		if ! [ $? -eq 0 ]
+		then
+			mkdir $bdir/$fn
+			mv $archive $bdir/$fn
+			continue
+		fi
+
 	elif [ $(file -b $archive | egrep 'Zip' | wc -l) -eq 1 ]
 	then
 		unzip -q $archive -x '__MACOSX/*' -d $t/ 2>/dev/null
 		line="$line 1"
+
+		if ! [ $? -eq 0 ]
+		then
+			mkdir $bdir/$fn
+			mv $archive $bdir/$fn
+			continue
+		fi
+
 	elif [ $(file -b $archive | grep 'RAR' | wc -l) -eq 1 ]
 	then
 		unrar -y x $archive $t/ -idq 2>/dev/null
 		line="$line 1"
+
+		if ! [ $? -eq 0 ]
+		then
+			mkdir $bdir/$fn
+			mv $archive $bdir/$fn
+			continue
+		fi
+
 	else
 		mkdir $bdir/$fn
 		mv $archive $bdir/$fn/
