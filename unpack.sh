@@ -69,8 +69,14 @@ do
 	fi 
 	
 	#check for directory and its name
+		
+	if [ $(find $t -mindepth 1 -type d | wc -l) -eq 0 ]
+	then
+		line="$line 1 1"
+		mkdir $adir/$fn
+		cp -r $t/* $adir/$fn/ 2>/dev/null
 
-	if [ $(find $t -mindepth 1 -type d | wc -l) -eq 1 ]	
+	elif [ $(find $t -mindepth 1 -type d | wc -l) -eq 1 ]	
 	then
 		line="$line 0"
 		if [ "$(find $t -mindepth 1 -maxdepth 1 -type d)" = "$t/$fn" ]
@@ -82,25 +88,33 @@ do
 		fi
 		
 		cp -r $t/$fn $adir/	
-	elif [ $(find $t -mindepth 1 -type d | wc -l) -gt 1 ]
-	then
-		line="$line 0"
-		echo "$fn"
-		if [ "$(find $t -type d | head -n 1 | cut -d '/' -f 1)" = $fn ]
+	else
+		i=1
+		while [ $(find $t -mindepth $i -maxdepth $i -type f | wc -l) -eq 0 ]
+		do
+			i=$(($i+1))
+		done
+		
+		if [ $i -eq 2 ]
 		then
 			line="$line 0"
-
-
 		else
 			line="$line 1"
-
 		fi
-		mv $(find $t -type d | tail -n 1) $t/$fn
-		cp -r $t/$fn $adir/	
-	else
-		line="$line 1 1"
+		
+		if [ $(find $t -mindepth 1 -maxdepth 1 -type d | wc -l) -eq 1 ] && \
+			[ "$(find $t -mindepth 1 -maxdepth 1 -type d)" = "$t/$fn" ]
+		then
+			line="$line 0"
+		else
+			line="$line 1"
+		fi
+
+
+
 		mkdir $adir/$fn
-		cp -r $t/* $adir/$fn/ 2>/dev/null
+		find $t -mindepth $i -maxdepth $i | xargs -I {} cp -r {} $adir/$fn
+		#cp -r $t/* $adir/$fn/ 2>/dev/null
 	fi
 	
 	rm -r $t
