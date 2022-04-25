@@ -74,7 +74,7 @@ do
 	then
 		line="$line 1 1"
 		mkdir $adir/$fn
-		cp -r $t/* $adir/$fn/ 2>/dev/null
+		cp -r $t/* $adir/$fn/
 
 	elif [ $(find $t -mindepth 1 -type d | wc -l) -eq 1 ]	
 	then
@@ -114,14 +114,13 @@ do
 
 		mkdir $adir/$fn
 		find $t -mindepth $i -maxdepth $i | xargs -I {} cp -r {} $adir/$fn
-		#cp -r $t/* $adir/$fn/ 2>/dev/null
 	fi
 	
 	rm -r $t
 	echo "$line" >> $r
 done
 
-#rm -r $tmp
+rm -r $tmp
 
 cat $r | sort -n > $result
 
