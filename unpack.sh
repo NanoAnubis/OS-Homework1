@@ -1,7 +1,5 @@
 #!/bin/bash
 
-rm -r $2 $3 $4
-
 
 zip=$1
 adir=$2
