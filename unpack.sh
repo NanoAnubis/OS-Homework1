@@ -22,9 +22,8 @@ do
 
 	if [ $(find $d -mindepth 1 -maxdepth 1 | wc -l) -gt 1 ]
 	then
-		echo "2 or more files"
 		mkdir $bdir/$fn
-		find $d -mindepth 1 -maxdepth 1 | xargs -I {} mv {} $bdir/$fn
+		find $d -mindepth 1 -maxdepth 1 | xargs -I {} cp -r {} $bdir/$fn
 		continue
 	fi
 	
