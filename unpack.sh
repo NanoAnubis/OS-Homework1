@@ -1,5 +1,9 @@
 #!/bin/bash
 
+if ! [ $# -eq 4 ]
+then
+	exit 1
+fi
 
 zip=$1
 adir=$2
